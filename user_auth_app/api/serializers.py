@@ -1,12 +1,40 @@
-from user_auth_app.models import UserProfile
+from user_auth_app.models import UserProfile, Contacts
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    contacts = serializers.StringRelatedField(many=True, read_only=True) # Hier wird auf den Model Contacts auf das feld mit related_name='contacts' zugegriffen
+    contact_count = serializers.SerializerMethodField()
+
+    def get_contact_count(self, obj):
+        return obj.contacts.count()
+
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['id', 'username', 'user_email','contact_count', 'contacts']
+
+
+class ContactSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        write_only=True,
+        source='user'
+    )
+
+    class Meta:
+        model = Contacts
+        fields = ['id', 'name', 'email', 'phone', 'user', 'user_id']
+
+
+class ContactHyperlinkSerializer(ContactSerializer ,serializers.HyperlinkedModelSerializer):
+    class Meta: 
+        model = Contacts
+        fields = ['url', 'name', 'email', 'phone']
 
 
 class EmailLoginSerializer(serializers.Serializer):

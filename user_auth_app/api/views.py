@@ -1,6 +1,6 @@
 from rest_framework import generics
-from user_auth_app.models import UserProfile
-from .serializers import UserProfileSerializer, EmailLoginSerializer
+from user_auth_app.models import UserProfile, Contacts
+from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from .serializers import RegistrationSerializer
@@ -9,9 +9,39 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 
 
-class UserProfileList(generics.ListCreateAPIView):
+class ContactsOfUserListView(generics.ListCreateAPIView):
+    serializer_class = ContactHyperlinkSerializer
+
+    # bekommen die Sellers von den Market
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        user_profile = UserProfile.objects.get(pk=pk)
+        return user_profile.contacts.all()
+    
+    def perform_create(self, serializer):
+        pk = self.kwargs.get('pk')
+        market = UserProfile.objects.get(pk=pk)
+        serializer.save(UserProfile=[UserProfile])
+
+
+class UserProfileListView(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+
+class UserProfileDetailView(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView, generics.RetrieveDestroyAPIView):
+    queryset = UserProfile.objects.all()    
+    serializer_class = UserProfileSerializer
+
+
+class ContactListView(generics.ListCreateAPIView):
+    queryset = Contacts.objects.all()
+    serializer_class = ContactHyperlinkSerializer
+
+
+class ContactDetailView(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView, generics.RetrieveDestroyAPIView):
+    queryset = Contacts.objects.all()
+    serializer_class = ContactSerializer
 
 
 class CustomLoginView(ObtainAuthToken):
