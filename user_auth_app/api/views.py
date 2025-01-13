@@ -8,6 +8,29 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 
+class SubtaskListView(generics.ListCreateAPIView):
+    queryset = Subtask.objects.all()
+    serializer_class = SubtaskSerializer
+
+
+class TaskListView(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskHyperlinkSerializer
+
+
+class TasksOfUserListView(generics.ListCreateAPIView):
+    serializer_class = TaskHyperlinkSerializer
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        user_profile = UserProfile.objects.get(pk=pk)
+        return user_profile.tasks.all()
+
 
 class ContactsOfUserListView(generics.ListCreateAPIView):
     serializer_class = ContactHyperlinkSerializer

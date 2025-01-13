@@ -1,4 +1,4 @@
-from user_auth_app.models import UserProfile, Contacts
+from user_auth_app.models import *
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -9,13 +9,47 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user_email = serializers.EmailField(source='user.email', read_only=True)
     contacts = serializers.StringRelatedField(many=True, read_only=True) # Hier wird auf den Model Contacts auf das feld mit related_name='contacts' zugegriffen
     contact_count = serializers.SerializerMethodField()
+    tasks = serializers.StringRelatedField(many=True, read_only=True)
 
     def get_contact_count(self, obj):
         return obj.contacts.count()
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'username', 'user_email','contact_count', 'contacts']
+        fields = ['id', 'username', 'user_email','contact_count', 'contacts', 'tasks']
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        write_only=True,
+        source='user'
+    )
+    subtasks = serializers.StringRelatedField(many=True, read_only=True)
+
+    class Meta: 
+        model = Task
+        fields = ['id', 'title', 'description', 'date', 'prio', 'category', 'subtasks', 'user', 'user_id']
+
+
+class TaskHyperlinkSerializer(TaskSerializer ,serializers.HyperlinkedModelSerializer):
+    class Meta: 
+        model = Task
+        fields = ['url', 'title', 'description', 'date', 'prio', 'category', 'subtasks', 'user', 'user_id']
+
+
+class SubtaskSerializer(serializers.ModelSerializer):
+    task = serializers.StringRelatedField(read_only=True)
+    task_id = serializers.PrimaryKeyRelatedField(
+        queryset=Task.objects.all(),
+        write_only=True,
+        source='task'
+    )
+
+    class Meta: 
+        model = Subtask
+        fields = '__all__'
 
 
 class ContactSerializer(serializers.ModelSerializer):
