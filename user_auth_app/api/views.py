@@ -7,6 +7,7 @@ from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authentication import TokenAuthentication
 
 class SubtaskListView(generics.ListCreateAPIView):
     queryset = Subtask.objects.all()
@@ -33,7 +34,7 @@ class TasksOfUserListView(generics.ListCreateAPIView):
 
 
 class ContactsOfUserListView(generics.ListCreateAPIView):
-    serializer_class = ContactHyperlinkSerializer
+    serializer_class = ContactSerializer
 
     # bekommen die Sellers von den Market
     def get_queryset(self):
@@ -44,7 +45,7 @@ class ContactsOfUserListView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
         market = UserProfile.objects.get(pk=pk)
-        serializer.save(UserProfile=[UserProfile])
+        serializer.save(user=[market])
 
 
 class UserProfileListView(generics.ListCreateAPIView):
@@ -59,7 +60,7 @@ class UserProfileDetailView(generics.RetrieveAPIView, generics.RetrieveUpdateAPI
 
 class ContactListView(generics.ListCreateAPIView):
     queryset = Contacts.objects.all()
-    serializer_class = ContactHyperlinkSerializer
+    serializer_class = ContactSerializer
 
 
 class ContactDetailView(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView, generics.RetrieveDestroyAPIView):
@@ -75,11 +76,13 @@ class CustomLoginView(ObtainAuthToken):
         data = {}
         if serializer.is_valid():
             user = serializer.validated_data['user']
+            user_id = UserProfile.objects.get(user=user).id
             token, created = Token.objects.get_or_create(user=user)
             data = {
                 'token': token.key,
                 'username': user.username,
-                'email': user.email
+                'email': user.email,
+                'id': user_id
             }
         else: 
             data=serializer.errors

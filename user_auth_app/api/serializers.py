@@ -74,12 +74,13 @@ class ContactHyperlinkSerializer(ContactSerializer ,serializers.HyperlinkedModel
 class EmailLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+    id = serializers.IntegerField(source='user.id', read_only=True)
 
     def validate(self, data):
+        
         email = data.get('email') # DATA: daten die wir übergeben haben (data=request.data)
         password = data.get('password')
         user = authenticate(email=email, password=password) # wird von unser eigenen Backend ausgeführt in der backends.py, haben die in settings verändert
-
         if user:
             data['user'] = user
         else:
