@@ -27,7 +27,8 @@ class UserProfile(models.Model):
 class Contacts(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    phone = models.CharField(max_length=20, default=True, null=True)
+    phone = models.CharField(max_length=20, default=True, blank=True)
+    color = models.CharField(max_length=100)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='contacts') # durch related_name könennw wir von UserProfileSerializer darauf zugreifen
 
     def __str__(self):
@@ -37,10 +38,12 @@ class Contacts(models.Model):
 class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(default='', blank=True)
-    date = models.DateField(auto_now_add=True)
+    taskCategory = models.CharField(max_length=30)
+    date = models.DateField()
     prio = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='tasks')
+    contacts = models.ManyToManyField(Contacts, related_name='tasks')
 
     def __str__(self):
         return self.title

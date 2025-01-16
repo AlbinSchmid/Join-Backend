@@ -21,11 +21,11 @@ class TaskListView(generics.ListCreateAPIView):
 
 class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
-    serializer_class = TaskHyperlinkSerializer
+    serializer_class = TaskSerializer
 
 
 class TasksOfUserListView(generics.ListCreateAPIView):
-    serializer_class = TaskHyperlinkSerializer
+    serializer_class = TaskSerializer
 
     def get_queryset(self):
         pk = self.kwargs.get('pk')

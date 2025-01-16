@@ -19,33 +19,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'user_email','contact_count', 'contacts', 'tasks']
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(read_only=True)
-    user_id = serializers.PrimaryKeyRelatedField(
-        queryset=UserProfile.objects.all(),
-        write_only=True,
-        source='user'
-    )
-    subtasks = serializers.StringRelatedField(many=True, read_only=True)
 
-    class Meta: 
-        model = Task
-        fields = ['id', 'title', 'description', 'date', 'prio', 'category', 'subtasks', 'user', 'user_id']
-
-
-class TaskHyperlinkSerializer(TaskSerializer ,serializers.HyperlinkedModelSerializer):
-    class Meta: 
-        model = Task
-        fields = ['url', 'title', 'description', 'date', 'prio', 'category', 'subtasks', 'user', 'user_id']
 
 
 class SubtaskSerializer(serializers.ModelSerializer):
     task = serializers.StringRelatedField(read_only=True)
-    task_id = serializers.PrimaryKeyRelatedField(
-        queryset=Task.objects.all(),
-        write_only=True,
-        source='task'
-    )
 
     class Meta: 
         model = Subtask
@@ -53,6 +31,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
 
 
 class ContactSerializer(serializers.ModelSerializer):
+    tasks = serializers.StringRelatedField(many=True, read_only=True)
     user = serializers.StringRelatedField(read_only=True)
     user_id = serializers.PrimaryKeyRelatedField(
         queryset=UserProfile.objects.all(),
@@ -62,13 +41,52 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contacts
-        fields = ['id', 'name', 'email', 'phone', 'user', 'user_id']
+        fields = ['id', 'name', 'email', 'phone', 'color', 'tasks', 'user', 'user_id']
 
 
 class ContactHyperlinkSerializer(ContactSerializer ,serializers.HyperlinkedModelSerializer):
     class Meta: 
         model = Contacts
         fields = ['url', 'name', 'email', 'phone']
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    contacts = ContactSerializer(many=True, read_only=True)
+    subtasks = SubtaskSerializer(many=True)
+    user = serializers.StringRelatedField(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        write_only=True,
+        source='user'
+    )
+    contact_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Contacts.objects.all(),
+        many=True,
+        write_only=True,
+        source='contacts'
+    )
+
+    class Meta: 
+        model = Task
+        fields = ['id', 'title', 'description', 'date', 'prio', 'category', 'taskCategory', 'subtasks', 'contacts', 'contact_ids', 'user', 'user_id']
+
+    def create(self, validated_data):
+        # subtasks und contacts sind verwandte Objekte, die nicht direkt als Teil der Hauptdaten für Task gespeichert werden. Sie müssen getrennt behandelt werden, weil sie eine Beziehung zu anderen Modellen haben.
+        subtasks_data = validated_data.pop('subtasks', [])
+        contacts_data = validated_data.pop('contacts', [])
+
+        #validated_data enthält alle anderen Felder, die mit dem Task-Modell zu tun haben, wie title, description, prio, usw. Task.objects.create() erstellt ein neues Task-Objekt in der Datenbank mit diesen Daten.
+        task = Task.objects.create(**validated_data)
+
+        #contacts_data enthält die Kontakte, die wir vorher aus den validated_data entfernt haben. Ein Task kann viele Contacts haben, daher verwenden wir set(), um diese Kontakte mit dem Task zu verbinden.
+        task.contacts.set(contacts_data)
+
+        #Für jede Subtask in subtasks_data wird ein neues Subtask-Objekt erstellt, wobei der task-ForeignKey automatisch auf das gerade erstellte Task gesetzt wird. Das bedeutet, jede Subtask wird mit dem entsprechenden Task verknüpf
+        for subtask_data in subtasks_data:
+            Subtask.objects.create(task=task, **subtask_data)
+            
+        return task
+
 
 
 class EmailLoginSerializer(serializers.Serializer):
@@ -89,6 +107,7 @@ class EmailLoginSerializer(serializers.Serializer):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+
     repeated_password = serializers.CharField(write_only=True)
 
     class Meta: 
