@@ -9,6 +9,11 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authentication import TokenAuthentication
 
+
+class SubtaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Subtask.objects.all()
+    serializer_class = SubtaskSerializer
+
 class SubtaskListView(generics.ListCreateAPIView):
     queryset = Subtask.objects.all()
     serializer_class = SubtaskSerializer
