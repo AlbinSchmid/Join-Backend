@@ -2,6 +2,7 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
+    path('guest-login/', GuestLoginView.as_view(), name='guest-login'),
     path('signUp/', RegistrationView.as_view(), name='registration'),
     path('logIn/', CustomLoginView.as_view(), name='logIn'),
     path('contact/', ContactListView.as_view(), name='contact'),
@@ -11,6 +12,7 @@ urlpatterns = [
     path('user-profile/<int:pk>/contact/', ContactsOfUserListView.as_view()),
     path('task/', TaskListView.as_view(), name='tasks'),
     path('task/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
+    path('edit-contact/task/<int:pk>/', TaskDetailViewEditContact.as_view(), name='task-detail'),
     path('user-profile/<int:pk>/task/', TasksOfUserListView.as_view()),
     path('subtask/', SubtaskListView.as_view(), name='subtasks'),
     path('subtask/<int:pk>/', SubtaskDetailView.as_view(), name='subtasks'),

@@ -10,9 +10,27 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authentication import TokenAuthentication
 
 
+class GuestLoginView(APIView):
+    def post(self, request):
+        # Erstelle einen Gastbenutzer
+        guest_user = User.objects.create_user(
+            username='guest', password='guest')
+        guest_user.save()
+        user_id = UserProfile.objects.get(user=guest_user).id
+
+        # Generiere ein Token für den Gastbenutzer
+        token, _ = Token.objects.get_or_create(user=guest_user)
+
+        return Response({'token': token.key,
+                         'username': guest_user.username,
+                         'email': guest_user.email,
+                         'id': user_id})
+
+
 class SubtaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Subtask.objects.all()
     serializer_class = SubtaskSerializer
+
 
 class SubtaskListView(generics.ListCreateAPIView):
     queryset = Subtask.objects.all()
@@ -22,6 +40,11 @@ class SubtaskListView(generics.ListCreateAPIView):
 class TaskListView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+
+class TaskDetailViewEditContact(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = EditContactTaskSerializer
 
 
 class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -46,7 +69,7 @@ class ContactsOfUserListView(generics.ListCreateAPIView):
         pk = self.kwargs.get('pk')
         user_profile = UserProfile.objects.get(pk=pk)
         return user_profile.contacts.all()
-    
+
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
         market = UserProfile.objects.get(pk=pk)
@@ -59,7 +82,7 @@ class UserProfileListView(generics.ListCreateAPIView):
 
 
 class UserProfileDetailView(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView, generics.RetrieveDestroyAPIView):
-    queryset = UserProfile.objects.all()    
+    queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
 
@@ -74,10 +97,11 @@ class ContactDetailView(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView
 
 
 class CustomLoginView(ObtainAuthToken):
-    permission_classes = [AllowAny] # Sagen hier das es immer anwenden darf
+    permission_classes = [AllowAny]  # Sagen hier das es immer anwenden darf
 
     def post(self, request):
-        serializer = EmailLoginSerializer(data=request.data) # der Serializer der dan später ausgeführt bei serializer.is_valid()
+        # der Serializer der dan später ausgeführt bei serializer.is_valid()
+        serializer = EmailLoginSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
             user = serializer.validated_data['user']
@@ -89,8 +113,8 @@ class CustomLoginView(ObtainAuthToken):
                 'email': user.email,
                 'id': user_id
             }
-        else: 
-            data=serializer.errors
+        else:
+            data = serializer.errors
 
         return Response(data)
 
@@ -110,7 +134,7 @@ class RegistrationView(APIView):
                 'username': save_user.username,
                 'email': save_user.email
             }
-        else: 
-            data=serializer.errors
+        else:
+            data = serializer.errors
 
         return Response(data)

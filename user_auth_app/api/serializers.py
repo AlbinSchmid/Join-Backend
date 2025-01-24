@@ -64,6 +64,28 @@ class ContactHyperlinkSerializer(ContactSerializer, serializers.HyperlinkedModel
         fields = ['url', 'name', 'email', 'phone']
 
 
+class EditContactTaskSerializer(serializers.ModelSerializer):
+    contacts = ContactSerializer(many=True, read_only=True)
+    subtasks = SubtaskSerializer(many=True)
+    user = serializers.StringRelatedField(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        write_only=True,
+        source='user'
+    )
+    contact_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Contacts.objects.all(),
+        many=True,
+        write_only=True,
+        source='contacts'
+    )
+
+    class Meta:
+        model = Task
+        fields = ['id', 'title', 'description', 'date', 'prio', 'category',
+                  'taskCategory', 'subtasks', 'contacts', 'contact_ids', 'user', 'user_id']
+
+
 class TaskSerializer(serializers.ModelSerializer):
     contacts = ContactSerializer(many=True, read_only=True)
     subtasks = SubtaskSerializer(many=True)
@@ -104,6 +126,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data): 
         subtasks_data = validated_data.pop('subtasks', None)  
+        contact_ids_data = validated_data.pop('contact_ids', None)
 
         for attr, value in validated_data.items():  
             setattr(instance, attr, value)  
@@ -111,21 +134,16 @@ class TaskSerializer(serializers.ModelSerializer):
 
         if subtasks_data is not None:  
             existing_subtasks = {subtask.id: subtask for subtask in instance.subtasks.all()}  
-        
-        # Liste der IDs der erstellten Subtasks  
             created_subtask_ids = []  
 
             for subtask_data in subtasks_data:  
                 subtask_id = subtask_data.get('id')  
 
-            # Wenn die ID null ist, erstelle einen neuen Subtask  
                 if subtask_id is None:  
-                # Neuen Subtask erstellen  
                     new_subtask = Subtask.objects.create(task=instance, **subtask_data)  
                     created_subtask_ids.append(new_subtask.id)  # Neue ID speichern  
                     print(f'New subtask created with id: {new_subtask.id} and data: {subtask_data}')  
                 elif subtask_id in existing_subtasks:  
-                # Bestehenden Subtask aktualisieren  
                     existing_subtask = existing_subtasks[subtask_id]  
                     for attr, value in subtask_data.items():  
                         setattr(existing_subtask, attr, value)  
@@ -133,12 +151,10 @@ class TaskSerializer(serializers.ModelSerializer):
                     created_subtask_ids.append(existing_subtask.id)  # Update ID speichern  
                     print(f'Updated subtask with id: {subtask_id}')  
 
-        # Lösche Subtasks, die nicht in den neuen Subtask-Daten enthalten sind  
             for subtask_id in existing_subtasks.keys():  
                 if subtask_id not in created_subtask_ids:  
                     existing_subtasks[subtask_id].delete()  # Lösche Subtask  
                     print(f'Deleted subtask with id: {subtask_id}')  
-
         return instance
 
 class EmailLoginSerializer(serializers.Serializer):
