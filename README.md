@@ -54,6 +54,6 @@ python manage.py migrate
 
 python manage.py runserver
 
-API-Endpunkte
+## API-Endpunkt
 
 Für den Zugriff auf die API-Endpunkte konsultiere bitte die projektspezifische Dokumentation oder die Umgebungsvariablen-Konfiguration. In der Entwicklungsumgebung kann der Standard-Endpunkt http://localhost:8000/ verwendet werden.
