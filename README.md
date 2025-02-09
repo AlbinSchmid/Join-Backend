@@ -1,10 +1,10 @@
-Join-Backend
+# Join-Backend
 
 Beschreibung
 
 Dies ist ein Backend-Projekt basierend auf Django 5.1.4 und dem Django REST Framework 3.15.2. Es dient als API-Backend für das Join-Projekt und ermöglicht eine flexible sowie skalierbare Datenverwaltung.
 
-Verwendete Technologien
+## Verwendete Technologien
 
 Django 5.1.4
 
@@ -20,37 +20,37 @@ sqlparse 0.5.3
 
 tzdata 2024.2
 
-Voraussetzungen
+## Voraussetzungen
 
 Python 3.10 oder höher
 
 Virtual Environment (empfohlen)
 
-Installation
+## Installation
 
-Repository klonen:
+### Repository klonen:
 
 git clone https://github.com/dein-benutzername/Join-Backend.git
 cd Join-Backend
 
-Virtuelle Umgebung erstellen:
+### Virtuelle Umgebung erstellen:
 
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate    # Windows
 
-Abhängigkeiten installieren:
+### Abhängigkeiten installieren:
 
 pip install -r requirements.txt
 
 .env-Datei erstellen:
 Erstelle eine .env-Datei im Projektverzeichnis für Umgebungsvariablen.
 
-Migrationen durchführen:
+### Migrationen durchführen:
 
 python manage.py migrate
 
-Server starten:
+## Server starten:
 
 python manage.py runserver
 
