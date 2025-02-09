@@ -30,7 +30,7 @@ Virtual Environment (empfohlen)
 
 ### Repository klonen:
 
-git clone https://github.com/dein-benutzername/Join-Backend.git
+git clone https://github.com/AlbinSchmid/Join-Backend.git
 cd Join-Backend
 
 ### Virtuelle Umgebung erstellen:
