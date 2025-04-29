@@ -27,7 +27,13 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['vm.albin-schmid.com']
+=======
+ALLOWED_HOSTS = [
+    'api.join.albin-schmid.com',
+]
+>>>>>>> b70fd43 (added dokumentation)
 
 
 # Application definition
@@ -41,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'user_auth_app'
+    'user_auth_app',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +63,8 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    'http://join.albin-schmid.com',
+    'https://join.albin-schmid.com',
     'http://127.0.0.1:4200',
     'http://localhost:4200',
 ]
@@ -65,6 +73,8 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:4200',
     'http://localhost:4200',
+    'http://join.albin-schmid.com',
+    'https://join.albin-schmid.com',
 ]
 
 

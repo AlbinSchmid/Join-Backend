@@ -141,19 +141,19 @@ class TaskSerializer(serializers.ModelSerializer):
 
                 if subtask_id is None:  
                     new_subtask = Subtask.objects.create(task=instance, **subtask_data)  
-                    created_subtask_ids.append(new_subtask.id)  # Neue ID speichern  
+                    created_subtask_ids.append(new_subtask.id)
                     print(f'New subtask created with id: {new_subtask.id} and data: {subtask_data}')  
                 elif subtask_id in existing_subtasks:  
                     existing_subtask = existing_subtasks[subtask_id]  
                     for attr, value in subtask_data.items():  
                         setattr(existing_subtask, attr, value)  
                     existing_subtask.save()  
-                    created_subtask_ids.append(existing_subtask.id)  # Update ID speichern  
+                    created_subtask_ids.append(existing_subtask.id)
                     print(f'Updated subtask with id: {subtask_id}')  
 
             for subtask_id in existing_subtasks.keys():  
                 if subtask_id not in created_subtask_ids:  
-                    existing_subtasks[subtask_id].delete()  # Lösche Subtask  
+                    existing_subtasks[subtask_id].delete()
                     print(f'Deleted subtask with id: {subtask_id}')  
         return instance
 
@@ -163,10 +163,8 @@ class EmailLoginSerializer(serializers.Serializer):
     id = serializers.IntegerField(source='user.id', read_only=True)
 
     def validate(self, data):
-        # DATA: daten die wir übergeben haben (data=request.data)
         email = data.get('email')
         password = data.get('password')
-        # wird von unser eigenen Backend ausgeführt in der backends.py, haben die in settings verändert
         user = authenticate(email=email, password=password)
         if user:
             data['user'] = user
