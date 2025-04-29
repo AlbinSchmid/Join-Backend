@@ -27,13 +27,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
-ALLOWED_HOSTS = ['vm.albin-schmid.com']
-=======
 ALLOWED_HOSTS = [
     'api.join.albin-schmid.com',
 ]
->>>>>>> b70fd43 (added dokumentation)
 
 
 # Application definition
@@ -158,7 +154,6 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Standard-Backend
-    # Dein benutzerdefiniertes Backend
+    'django.contrib.auth.backends.ModelBackend', 
     'user_auth_app.api.backends.EmailAuthBackend',
 ]
