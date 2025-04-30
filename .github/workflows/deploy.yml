@@ -13,5 +13,7 @@ jobs:
         key: ${{ secrets.SECRET }}
         port: ${{ secrets.PORT }}
         script: |
-          sudo su - schmidalbin15 -c "cd /home/schmidalbin15/projects/Join-Backend && git pull"
-          sudo su - schmidalbin15 -c "cd /home/schmidalbin15/projects/Join-Backend && ./env/bin/pip install -r requirements.txt"
+          cd /home/schmidalbin15/projects/Join-Backend
+          sudo su - schmidalbin15 -c "git pull"
+          sudo su - schmidalbin15 -c "./env/bin/pip install -r requirements.txt"3
+          sudo supervisorctl restart join_gunicorn
