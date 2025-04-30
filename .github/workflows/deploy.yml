@@ -1,6 +1,7 @@
-name: 🚀 Update Server on push
+name: remote ssh command
 on: [push]
 jobs:
+
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -13,7 +14,8 @@ jobs:
         key: ${{ secrets.SECRET }}
         port: ${{ secrets.PORT }}
         script: |
-          cd /home/schmidalbin15/projects/Join-Backend
-          sudo su - schmidalbin15 -c "git pull"
-          sudo su - schmidalbin15 -c "./env/bin/pip install -r requirements.txt"3
+          sudo su - schmidalbin15 -c "cd /home/schmidalbin15/projects/Join-Backend && git pull"
+          sudo su - schmidalbin15 -c "cd /home/schmidalbin15/projects/Join-Backend && ./env/bin/pip install -r requirements.txt"
           sudo supervisorctl restart join_gunicorn
+
+
