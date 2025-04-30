@@ -1,4 +1,4 @@
-name: 🚀 Deploy website on push
+name: 🚀 Update Server on push
 on: [push]
 jobs:
   build:
