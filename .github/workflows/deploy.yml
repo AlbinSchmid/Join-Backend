@@ -13,6 +13,6 @@ jobs:
         key: ${{ secrets.SECRET }}
         port: ${{ secrets.PORT }}
         script: |
-          cd Join-Backend 
+          cd /home/schmidalbin15/projects/Join-Backend
           sudo git pull
           sudo ./env/bin/pip install -r requirements.txt
