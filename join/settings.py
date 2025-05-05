@@ -29,6 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '34.65.157.193',
     'api.join.albin-schmid.com',
 ]
 
@@ -161,9 +162,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 sentry_sdk.init(
-    dsn="https://97950485f5fb4d8b99f786fe89038ed3@o4509243315585024.ingest.de.sentry.io/4509270276374608",
-    # Add data like request headers and IP for users,
-    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    dsn=os.getenv('SENTRY_DSN'),
     send_default_pii=True,
 )
 
