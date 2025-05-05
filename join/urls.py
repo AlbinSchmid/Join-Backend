@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
-from join import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
 
 urlpatterns = [
+    path('sentry-debug/', trigger_error),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('user_auth_app.api.urls'))

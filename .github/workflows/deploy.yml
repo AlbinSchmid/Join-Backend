@@ -1,4 +1,4 @@
-name: remote ssh command
+name: Update Server on Push 
 on: [push]
 jobs:
 
