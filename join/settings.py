@@ -161,7 +161,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 sentry_sdk.init(
-    dsn="https://d77748f7bbdca14b96cc15884f175ac5@o4509243315585024.ingest.de.sentry.io/4509243317223504",
+    dsn="https://d77748f7bbdca14b96cc15884f175ac5@o4509243315585024.ingest.de.sentry.io/4509270276374608",
     # Add data like request headers and IP for users;
     # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
     send_default_pii=True,
