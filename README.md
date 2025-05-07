@@ -4,21 +4,15 @@ Beschreibung
 
 Dies ist ein Backend-Projekt basierend auf Django 5.1.4 und dem Django REST Framework 3.15.2. Es dient als API-Backend für das Join-Projekt und ermöglicht eine flexible sowie skalierbare Datenverwaltung.
 
-## Verwendete Technologien
+## 🛠️ Technologie-Stack
 
-Django 5.1.4
-
-Django REST Framework 3.15.2
-
-django-cors-headers 4.6.0
-
-asgiref 3.8.1
-
-python-dotenv 1.0.1
-
-sqlparse 0.5.3
-
-tzdata 2024.2
+- Django 5.1.4
+- Django REST Framework 3.15.2
+- django-cors-headers 4.6.0
+- asgiref 3.8.1
+- python-dotenv 1.0.1
+- sqlparse 0.5.3
+- tzdata 2024.2
 
 ---
 
