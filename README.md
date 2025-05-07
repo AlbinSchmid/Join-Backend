@@ -20,39 +20,55 @@ sqlparse 0.5.3
 
 tzdata 2024.2
 
+---
+
 ## Voraussetzungen
 
 Python 3.10 oder höher
 
 Virtual Environment (empfohlen)
 
+---
+
 ## Installation
 
 ### Repository klonen:
 
+```
 git clone https://github.com/AlbinSchmid/Join-Backend.git
 cd Join-Backend
+```
 
 ### Virtuelle Umgebung erstellen:
 
+```
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate    # Windows
+```
 
 ### Abhängigkeiten installieren:
 
+```
 pip install -r requirements.txt
+```
 
 .env-Datei erstellen:
 Erstelle eine .env-Datei im Projektverzeichnis für Umgebungsvariablen.
 
 ### Migrationen durchführen:
 
+```
 python manage.py migrate
+```
+
+---
 
 ## Server starten:
 
 python manage.py runserver
+
+---
 
 ## API-Endpunkt
 
