@@ -1,8 +1,8 @@
 # Join-Backend
 
-Beschreibung
-
 Dies ist ein Backend-Projekt basierend auf Django 5.1.4 und dem Django REST Framework 3.15.2. Es dient als API-Backend für das Join-Projekt und ermöglicht eine flexible sowie skalierbare Datenverwaltung.
+
+---
 
 ## 🛠️ Technologie-Stack
 
@@ -16,15 +16,13 @@ Dies ist ein Backend-Projekt basierend auf Django 5.1.4 und dem Django REST Fram
 
 ---
 
+## 📦 Installation
+
 ## Voraussetzungen
 
 Python 3.10 oder höher
 
 Virtual Environment (empfohlen)
-
----
-
-## Installation
 
 ### Repository klonen:
 
@@ -58,12 +56,26 @@ python manage.py migrate
 
 ---
 
-## Server starten:
+## 🚀 Server starten:
 
 python manage.py runserver
 
 ---
 
-## API-Endpunkt
+##  API-Endpunkt
 
 Für den Zugriff auf die API-Endpunkte konsultiere bitte die projektspezifische Dokumentation oder die Umgebungsvariablen-Konfiguration. In der Entwicklungsumgebung kann der Standard-Endpunkt http://localhost:8000/ verwendet werden.
+
+---
+
+## 🧪 Testing
+
+```
+python manage.py test
+```
+
+---
+
+## 📄 Lizenz
+
+Dieses Projekt steht unter der MIT-Lizenz.
