@@ -58,7 +58,9 @@ python manage.py migrate
 
 ## 🚀 Server starten:
 
+```
 python manage.py runserver
+```
 
 ---
 
